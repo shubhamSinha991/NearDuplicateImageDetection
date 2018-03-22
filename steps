@@ -1,0 +1,40 @@
+
+create the VISUAL VOCABULARY(VV) first
+
+1.take random set of images as dataset to create the VV.
+2.find each of the images' sift keypoints and find out descriptors of these keypoints(size of the descriptor array will be NUMBER OF KP*128)
+3.all the descriptors are appended to a single array.This single array contains all the descriptors af all the images.(let the total no. of rows in this array be 50K)
+4.perform k-means clustering to find the centers(2k centers)
+5.This array of the centers found after kmeans is the visual vocabulary.
+
+to find similarity using the VV-
+1 test image and a dataset of images. to find that test image is near similar to which image in the dataset.
+
+1.find keypoints(sift) of test image and all the images in the dataset. Let test image be ti, and 2 images in dataset be d1 and d2.
+no of kp in ti=150 
+no of kp in d1=100
+no of kp in d2=50
+
+to find out signature of all the images(test and dataset) and then compare using Jaccard set similarity given for two sets A,B as 
+A intersection B/ A union B
+The signature of all the images should be same.
+
+3.for ti for example,
+for each kp in ti, find index of the center in the VV which has min distance from the kp and then store in in a 1-d array.
+so there will be a 1*150 array with ith index containing the index of the center in VV which has min distance from the ith kp in ti.
+
+for d1 it will be 1*100
+for d2 it will be 1*50
+
+
+4.50 hash functions of the form (ax+b)%c are present with random values of a,b and c
+h1,h2,........,h50
+
+applying h1 on the 1-d array from step 3, we will again get an array of the same size where ith index will contain the value after applying the hash function on the ith element of the 1-d array from step 3. find min of the 150 hashed values(for ti)
+
+similarly, find 50 minimum min hashed values.
+store in array->signature
+
+5. apply Jaccard similarity to find similarity %
+if ith position of signature of 2 images have same values then take one, other wise 0. add the 0s and 1s got and divide by 50 to get % match.
+
